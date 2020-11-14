@@ -42,7 +42,6 @@ def index():
         username = reg_form.username.data
         password = reg_form.password.data
 
-        # Hash password
         hashed_pswd = pbkdf2_sha256.hash(password)
 
         # Add username & hashed password to DB
