@@ -101,6 +101,8 @@ def on_message(data):
 
     res = ""
     msg = data["msg"]
+    print(type(msg))
+    print(msg)
     temp_msg = msg.split("#")
 
     if temp_msg[-1][:3] == "aes":
