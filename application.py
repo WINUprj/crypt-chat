@@ -5,6 +5,7 @@ from flask_login import LoginManager, login_user, current_user, logout_user
 from flask_socketio import SocketIO, join_room, leave_room, send
 from passlib.hash import pbkdf2_sha256
 
+from aes import aes_encrypt
 from wtform_fields import *
 from models import *
 
@@ -98,12 +99,23 @@ def page_not_found(e):
 def on_message(data):
     """Broadcast messages"""
 
+    res = ""
     msg = data["msg"]
+    temp_msg = msg.split("#")
+
+    if temp_msg[-1][:3] == "aes":
+        key = temp_msg.split(":")[-1]
+        msg = aes_encrypt(temp_msg[:-1], key)
+        if msg == 0: 
+            res = temp_msg[0]
+        else:
+            res = msg
+
     username = data["username"]
     room = data["room"]
     # Set timestamp
     time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
-    send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
+    send({"username": username, "msg": res, "time_stamp": time_stamp}, room=room)
 
 
 @socketio.on('join')
