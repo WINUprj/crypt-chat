@@ -101,14 +101,14 @@ def on_message(data):
 
     res = ""
     msg = data["msg"]
-    print(type(msg))
-    print(msg)
+    # print(type(msg))
+    # print(msg)
     temp_msg = msg.split("#")
 
     if temp_msg[-1][:3] == "aes":
         key = temp_msg[1].split(":")[-1]
         msg = aes_encrypt(temp_msg[:-1], key)
-        if msg == 0: 
+        if msg == 1: 
             res = temp_msg[0]
         else:
             res = msg
