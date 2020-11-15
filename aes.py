@@ -378,7 +378,7 @@ def aes_encrypt(msg, key):
         valid -= 1
 
     res = ""
-    for x in range(lenght):
+    for x in range(length):
         for y in range(4):
             for j in range(4):
                 res += blocks[x][j][y]
