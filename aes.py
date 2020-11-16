@@ -302,7 +302,7 @@ def aes_encrypt(msg, key):
         blocks.append(sorted_array)
 
     if len(key) != 16:
-        return 1 
+        return None
     
     init_key = []
     for i in range(16):

@@ -6,6 +6,7 @@ from flask_socketio import SocketIO, join_room, leave_room, send
 from passlib.hash import pbkdf2_sha256
 
 from aes import aes_encrypt
+from aes_decryption import aes_decrypt
 from wtform_fields import *
 from models import *
 
@@ -103,22 +104,30 @@ def on_message(data):
     msg = data["msg"]
     # print(type(msg))
     # print(msg)
-    temp_msg = msg.split("#")
+    if "#" in msg:
+        temp_msg = msg.split("#")
 
-    if temp_msg[-1][:3] == "aes":
-        key = temp_msg[1].split(":")[-1]
-        msg = aes_encrypt(temp_msg[:-1], key)
-        if msg == 1: 
-            res = temp_msg[0]
-        else:
-            res = msg
+        if temp_msg[-1][:3] == "aes":
+            key = temp_msg[1].split(":")[-1]
+            msg = aes_encrypt(temp_msg[:-1], key)
+            if msg is None: 
+                res = temp_msg[0]
+            else:
+                res = msg
+    else:
+        res = msg 
 
     username = data["username"]
     room = data["room"]
     # Set timestamp
     time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
     send({"username": username, "msg": res, "time_stamp": time_stamp}, room=room)
-
+    
+    # decryption 
+    if msg is None:
+        return 0
+    res = aes_decrypt(res, key)
+    send({"username": username, "msg": res, "time_stamp": time_stamp}, room=room)
 
 @socketio.on('join')
 def on_join(data):
