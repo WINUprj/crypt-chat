@@ -137,7 +137,7 @@ def on_join(data):
     room = data["room"]
     join_room(room)
 
-    # Broadcast that new user has joined
+    # Broadcast 
     send({"msg": username + " has joined the " + room + " room."}, room=room)
 
 
